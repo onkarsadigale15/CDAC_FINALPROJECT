@@ -1,0 +1,36 @@
+package com.app.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.app.dto.Login;
+import com.app.excepe.UserHandlingException;
+import com.app.pojo.Customer;
+import com.app.pojo.User;
+import com.app.service.IAdminService;
+
+@RestController
+@RequestMapping("/admin")
+@CrossOrigin(origins = "http://localhost:3000")
+public class AdminController {
+
+	@Autowired
+	private IAdminService adminService;
+	
+	@PostMapping
+	public  ResponseEntity<?> login(@RequestBody Login login) {
+		System.out.println("before in admin ");
+		User admin = adminService.loginAsAdmin(login) ;
+		if(admin instanceof User) {
+			System.out.println("after successfull "+admin);
+			return ResponseEntity.ok(admin);
+			
+		}else
+			throw new UserHandlingException("Admin Not Found");
+	}	
+}
